@@ -1,0 +1,32 @@
+{
+  "name": "choucroutejs",
+  "version": "1.0.0",
+  "description": "Framework javascript pour créer un web service",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "lib/"
+  ],
+  "keywords": [],
+  "author": "Antoine Battut",
+  "license": "ISC",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BattutDev/choucroutejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BattutDev/choucroutejs/issues"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.23.9",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.10.0",
+    "prettier": "^2.8.8"
+  }
+}
