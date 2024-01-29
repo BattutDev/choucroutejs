@@ -1,5 +1,5 @@
 import http, {createServer} from 'http';
-import {CallBackType, Method} from './';
+import {CallBackType, Method, Request} from './';
 
 export default class Server {
 
@@ -43,9 +43,14 @@ export default class Server {
 	public request<T> (route: string, method: Method, callback: CallBackType<T>) {
 		this.getListener().on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
 			if (req.url === route && req.method === method) {
-				const response = callback(req, res);
-				res.writeHead(200, {'Content-Type': 'application/json'});
-				res.end(JSON.stringify(response));
+				new Request()
+					.setHeaders(req.headers)
+					.setMethod(method)
+					.setBody(req).then((request) => {
+						const response = callback(request, res);
+						res.writeHead(200, {'Content-Type': 'application/json'});
+						res.end(JSON.stringify(response));
+					});
 			}
 		});
 	}
