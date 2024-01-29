@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && node ./tests/index.js"
   },
   "files": [
     "lib/"
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.9",
+    "@types/node": "^20.11.10",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
