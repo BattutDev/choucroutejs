@@ -20,24 +20,24 @@ export default class Server {
 		return this.listener;
 	}
 
-	public get<T> (route: string, callback: CallBackType<T>) {
-		this.request(route, Method.GET, callback);
+	public get<T> (route: string, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+		this.request(route, Method.GET, callback, middlewares);
 	}
 
-	public post<T> (route: string, callback: CallBackType<T>) {
-		this.request(route, Method.POST, callback);
+	public post<T> (route: string, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+		this.request(route, Method.POST, callback, middlewares);
 	}
 
-	public patch<T> (route: string, callback: CallBackType<T>) {
-		this.request(route, Method.PATCH, callback);
+	public patch<T> (route: string, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+		this.request(route, Method.PATCH, callback, middlewares);
 	}
 
-	public put<T> (route: string, callback: CallBackType<T>) {
-		this.request(route, Method.PUT, callback);
+	public put<T> (route: string, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+		this.request(route, Method.PUT, callback, middlewares);
 	}
 
-	public delete<T> (route: string, callback: CallBackType<T>) {
-		this.request(route, Method.DELETE, callback);
+	public delete<T> (route: string, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+		this.request(route, Method.DELETE, callback, middlewares);
 	}
 
 	public request<T> (route: string, method: Method, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {

@@ -1,4 +1,4 @@
-import Server from './server';
+import Server from './Server';
 import Request from './Request';
 import BaseMiddleware from './BaseMiddleware';
 
