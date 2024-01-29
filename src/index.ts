@@ -1,3 +1,1 @@
-import Server from './Classes/server';
-
-export { Server };
+export * from './Classes';
