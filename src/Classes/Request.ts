@@ -1,5 +1,5 @@
-import {IncomingHttpHeaders, IncomingMessage} from 'node:http';
-import {DefaultBodyType, Method} from './';
+import { IncomingHttpHeaders, IncomingMessage } from 'node:http';
+import { DefaultBodyType, Method } from './';
 
 export default class Request {
 
@@ -18,7 +18,9 @@ export default class Request {
 				body += chunk;
 			});
 			r.on('end', () => {
-				this.body = JSON.parse(body);
+				if (body.length) {
+					this.body = JSON.parse(body);
+				}
 				resolve(this);
 			});
 		});
