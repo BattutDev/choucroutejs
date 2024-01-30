@@ -1,5 +1,18 @@
-import {createServer, Server as HttpServer, IncomingMessage, ServerResponse} from 'node:http';
-import {CallBackType, Method, Request, Response, BaseMiddleware, MethodStringType} from './';
+import {
+	createServer,
+	Server as HttpServer,
+	IncomingMessage,
+	ServerResponse
+} from 'node:http';
+
+import {
+	CallBackType,
+	Method,
+	Request,
+	Response,
+	BaseMiddleware,
+	MethodStringType
+} from './';
 
 export default class Server {
 

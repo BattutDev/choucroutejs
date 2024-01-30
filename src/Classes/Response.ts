@@ -1,4 +1,4 @@
-import {OutgoingHttpHeaders, ServerResponse} from 'node:http';
+import { OutgoingHttpHeaders, ServerResponse } from 'node:http';
 export default class Response {
 
 	private readonly rawResponse: ServerResponse;
