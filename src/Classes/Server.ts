@@ -1,9 +1,9 @@
-import http, {createServer} from 'http';
+import {createServer, Server as HttpServer, IncomingMessage, ServerResponse} from 'http';
 import {CallBackType, Method, Request, BaseMiddleware, MethodStringType} from './';
 
 export default class Server {
 
-	private listener: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse> | null = null;
+	private listener: HttpServer<typeof IncomingMessage, typeof ServerResponse> | null = null;
 
 	constructor () {}
 
@@ -13,7 +13,7 @@ export default class Server {
 		});
 	}
 
-	private getListener (): http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>  {
+	private getListener (): HttpServer<typeof IncomingMessage, typeof ServerResponse>  {
 		if (this.listener === null) {
 			this.listener = createServer();
 		}
@@ -41,7 +41,7 @@ export default class Server {
 	}
 
 	public request<T> (route: string, method: Method | MethodStringType, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
-		this.getListener().on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
+		this.getListener().on('request', (req: IncomingMessage, res: ServerResponse) => {
 			if (req.url === route && req.method === method) {
 
 				new Request()

@@ -1,4 +1,4 @@
-import http from 'http';
+import {ServerResponse} from 'http';
 import {Request} from './';
 
 export enum Method {
@@ -15,6 +15,6 @@ export type MethodStringType = Method.GET
 	| Method.DELETE
 	| Method.PATCH;
 
-export type CallBackType<T> = (req: Request, res: http.ServerResponse) => T;
+export type CallBackType<T> = (req: Request, res: ServerResponse) => T;
 
 export type DefaultBodyType = NonNullable<unknown>;
