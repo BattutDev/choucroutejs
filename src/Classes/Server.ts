@@ -1,5 +1,5 @@
 import http, {createServer} from 'http';
-import {CallBackType, Method, Request, BaseMiddleware} from './';
+import {CallBackType, Method, Request, BaseMiddleware, MethodStringType} from './';
 
 export default class Server {
 
@@ -40,25 +40,29 @@ export default class Server {
 		this.request(route, Method.DELETE, callback, middlewares);
 	}
 
-	public request<T> (route: string, method: Method, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
+	public request<T> (route: string, method: Method | MethodStringType, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
 		this.getListener().on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
 			if (req.url === route && req.method === method) {
+
 				new Request()
 					.setHeaders(req.headers)
 					.setMethod(method)
 					.setBody(req).then((request) => {
 
-						const next = () => {
+						new Promise<boolean>((resolve) => {
+							Promise.all(middlewares.map((middleware) => {
+								middleware.run(request, res);
+							})).then(() => {
+								resolve(true);
+							});
+						}).then(() => {
 							const response = callback(request, res);
 							res.writeHead(200, {'Content-Type': 'application/json'});
 							res.end(JSON.stringify(response));
-						};
-
-						if (middlewares.length > 0) {
-							middlewares[0].run(request, res, next);
-						} else {
-							next();
-						}
+						}).catch((e) => {
+							res.writeHead(400, {'Content-Type': 'application/json'});
+							res.end(JSON.stringify({message: e.message}));
+						});
 					});
 			}
 		});
