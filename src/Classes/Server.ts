@@ -1,5 +1,5 @@
-import {createServer, Server as HttpServer, IncomingMessage, ServerResponse} from 'http';
-import {CallBackType, Method, Request, BaseMiddleware, MethodStringType} from './';
+import {createServer, Server as HttpServer, IncomingMessage, ServerResponse} from 'node:http';
+import {CallBackType, Method, Request, Response, BaseMiddleware, MethodStringType} from './';
 
 export default class Server {
 
@@ -44,6 +44,8 @@ export default class Server {
 		this.getListener().on('request', (req: IncomingMessage, res: ServerResponse) => {
 			if (req.url === route && req.method === method) {
 
+				const response = new Response(res);
+
 				new Request()
 					.setHeaders(req.headers)
 					.setMethod(method)
@@ -56,12 +58,10 @@ export default class Server {
 								resolve(true);
 							});
 						}).then(() => {
-							const response = callback(request, res);
-							res.writeHead(200, {'Content-Type': 'application/json'});
-							res.end(JSON.stringify(response));
+							const json = callback(request, response);
+							response.send(json, 200, {'Content-Type': 'application/json'});
 						}).catch((e) => {
-							res.writeHead(400, {'Content-Type': 'application/json'});
-							res.end(JSON.stringify({message: e.message}));
+							response.send({message: e.message}, 400, {'Content-Type': 'application/json'});
 						});
 					});
 			}
