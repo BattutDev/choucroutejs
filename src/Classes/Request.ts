@@ -18,7 +18,9 @@ export default class Request {
 				body += chunk;
 			});
 			r.on('end', () => {
-				this.body = JSON.parse(body);
+				if (body.length) {
+					this.body = JSON.parse(body);
+				}
 				resolve(this);
 			});
 		});
