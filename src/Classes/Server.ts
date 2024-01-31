@@ -80,4 +80,13 @@ export default class Server {
 			}
 		});
 	}
+
+	public close () {
+		return new Promise((resolve, reject) => {
+			this.getListener().close((err) => {
+				if (err) reject(err);
+				else resolve(true);
+			});
+		});
+	}
 }
