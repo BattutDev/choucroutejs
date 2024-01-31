@@ -4,7 +4,7 @@ const app = new Server();
 
 app.connect(3000);
 
-app.get('/', () => {
+app.post('/', () => {
 	return {
 		message: 'ok'
 	};
@@ -16,19 +16,19 @@ class HelloMiddleware extends BaseMiddleware {
 	}
 }
 
-app.get('/hello', (req) => {
+app.post('/hello', (req) => {
 	return {
 		hello: req.hello
 	};
 }, [HelloMiddleware]);
 
-test('GET /',  async () => {
-	const data = await fetchData('http://localhost:3000/');
+test('POST /',  async () => {
+	const data = await fetchData('http://localhost:3000/', 'POST');
 	expect(JSON.stringify(data)).toBe(JSON.stringify({message: 'ok'}));
 });
 
-test('GET /hello - Middleware',  async () => {
-	const data = await fetchData('http://localhost:3000/hello');
+test('POST /hello - Middleware',  async () => {
+	const data = await fetchData('http://localhost:3000/hello', 'POST');
 	expect(JSON.stringify(data)).toBe(JSON.stringify({hello: 'world'}));
 });
 
