@@ -18,10 +18,8 @@ server.get('/', (req, res) => {
 
 ```js
 class Middleware extends BaseMiddleware {
-    static run (req, res, next) {
+    static run (req, res) {
         // Votre code
-        // next() permet de passer à l'étape suivante
-        next();
     }
 }
 
