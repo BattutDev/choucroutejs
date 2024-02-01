@@ -1,60 +1,35 @@
-const {Server , BaseMiddleware} = require('../lib/');
+const { HelloMiddleware } = require('./middlewares');
+const { fetchData } = require('./functions');
+const App = require('./server');
 
-const app = new Server();
-
-app.connect(3000);
+const app = App.getInstance().getServer();
 
 app.get('/', () => {
 	return {
 		message: 'ok'
 	};
 });
-
-class HelloMiddleware extends BaseMiddleware {
-	static run (req) {
-		req.hello = 'world';
-	}
-}
+test('GET /',  async () => {
+	const data = await fetchData('http://localhost:3000/');
+	expect(JSON.stringify(data)).toBe(JSON.stringify({message: 'ok'}));
+});
 
 app.get('/hello', (req) => {
 	return {
 		hello: req.hello
 	};
 }, [HelloMiddleware]);
-
-test('GET /',  async () => {
-	const data = await fetchData('http://localhost:3000/');
-	expect(JSON.stringify(data)).toBe(JSON.stringify({message: 'ok'}));
-});
-
 test('GET /hello - Middleware',  async () => {
 	const data = await fetchData('http://localhost:3000/hello');
 	expect(JSON.stringify(data)).toBe(JSON.stringify({hello: 'world'}));
 });
 
-afterAll(() => {
-	return app.close();
+app.get('/list', (req) => {
+	return {
+		page: req.queryParams.get('page'),
+	};
 });
-
-function fetchData (url, method = 'GET', body = null) {
-	return new Promise((resolve, reject) => {
-		fetch(url, {
-			method,
-			body: body ? JSON.stringify(body) : null,
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}).then((res) => {
-			res.json().then((json) => {
-				resolve(json);
-			});
-		}).catch((err) => {
-			reject(err);
-
-		});
-	});
-}
-
-
-
-
+test('GET /list - Basic query param',  async () => {
+	const data = await fetchData('http://localhost:3000/list?page=1');
+	expect(JSON.stringify(data)).toBe(JSON.stringify({page: '1'}));
+});

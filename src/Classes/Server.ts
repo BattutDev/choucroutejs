@@ -55,7 +55,12 @@ export default class Server {
 
 	public request<T> (route: string, method: Method | MethodStringType, callback: CallBackType<T>, middlewares: Array<BaseMiddleware> = []) {
 		this.getListener().on('request', (req: IncomingMessage, res: ServerResponse) => {
-			if (req.url === route && req.method === method) {
+
+			const splittedRequest = (<string>req.url).split('?');
+			const path = splittedRequest[0];
+			const queryParams = splittedRequest[1];
+
+			if (path === route && req.method === method) {
 
 				const response = new Response(res);
 
@@ -63,6 +68,10 @@ export default class Server {
 					.setHeaders(req.headers)
 					.setMethod(method)
 					.setBody(req).then((request) => {
+
+						if (queryParams) {
+							request.setQueryParams(queryParams);
+						}
 
 						new Promise<boolean>((resolve) => {
 							Promise.all(middlewares.map((middleware) => {
