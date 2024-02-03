@@ -41,6 +41,7 @@
     "prefer-const": [
       "error"
     ],
-    "no-undef": "off"
+    "no-undef": "off",
+    "no-var-requires": "off"
   }
 }
