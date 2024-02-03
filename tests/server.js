@@ -6,10 +6,9 @@ class App {
 	server = null;
 
 	constructor () {
-
 		this.server = new Server();
-		//this.server.connect(3000);
 	}
+
 	static getInstance () {
 
 		if (!App.instance) {
