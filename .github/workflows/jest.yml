@@ -1,0 +1,25 @@
+name: Jest (Unit tests)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Transpile Project
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm run test
+
+
