@@ -1,6 +1,6 @@
 {
   "name": "choucroutejs",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Framework javascript pour créer un web service",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
