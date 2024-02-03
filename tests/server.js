@@ -8,9 +8,7 @@ class App {
 	constructor () {
 
 		this.server = new Server();
-
-		this.server.connect(3000);
-
+		//this.server.connect(3000);
 	}
 	static getInstance () {
 
@@ -27,6 +25,12 @@ class App {
 		return this.server;
 
 	}
+
+	closeServer () {
+		this.server.close();
+		App.instance = null;
+	}
+
 }
 
 module.exports = App;

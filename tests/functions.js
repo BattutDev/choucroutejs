@@ -1,6 +1,6 @@
 function fetchData (url, method = 'GET', body = null) {
 	return new Promise((resolve, reject) => {
-		fetch(url, {
+		return fetch(url, {
 			method,
 			body: body ? JSON.stringify(body) : null,
 			headers: {
