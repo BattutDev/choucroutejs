@@ -1,4 +1,4 @@
-name: Tests
+name: Jest (Unit tests)
 
 on: [push, pull_request]
 
@@ -21,3 +21,5 @@ jobs:
 
       - name: Run unit tests
         run: npm run test
+
+
