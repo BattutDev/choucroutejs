@@ -36,8 +36,5 @@ describe('POST', () => {
 		return expect(JSON.stringify(data)).toBe(JSON.stringify({hello: 'world'}));
 	});
 
-	test('Testing something bad', () => {
-		return expect(1+1).toBe(3);
-	});
 
 });
