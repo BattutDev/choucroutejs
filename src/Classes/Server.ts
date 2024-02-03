@@ -13,16 +13,26 @@ import {
 	BaseMiddleware,
 	MethodStringType
 } from './';
+import { Socket } from 'node:net';
 
 export default class Server {
 
 	private listener: HttpServer<typeof IncomingMessage, typeof ServerResponse> | null = null;
+
+	private connections: Set<Socket> = new Set();
 
 	constructor () {}
 
 	public connect (port: number = 8080, address: string = 'localhost'): Promise<void> {
 		return new Promise<void>((resolve) => {
 			this.getListener().listen(port, address, resolve.bind(this));
+
+			this.getListener().on('connection', (connection) => {
+				this.connections.add(connection);
+				connection.on('close', () => {
+					this.connections.delete(connection);
+				});
+			});
 		});
 	}
 
@@ -91,7 +101,17 @@ export default class Server {
 	}
 
 	public close () {
+		// Nota: close() function only close new connections, wait for all connections to be closed, and close the server
+		// In case of unit tests, it can take a long time to close the server
+		// So unit tests always failed :(
 		return new Promise((resolve, reject) => {
+
+			// Close all active sockets
+			this.connections.forEach((connection) => {
+				connection.destroy();
+			});
+
+			// Close new connections from now, and if no connections, close the server
 			this.getListener().close((err) => {
 				if (err) reject(err);
 				else resolve(true);
