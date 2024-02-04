@@ -1,4 +1,5 @@
 import {Request, Response} from './';
+import {Session} from '../Session';
 
 export enum Method {
 	GET = 'GET',
@@ -17,3 +18,7 @@ export type MethodStringType = Method.GET
 export type CallBackType<T> = (req: Request, res: Response) => T;
 
 export type DefaultBodyType = NonNullable<unknown>;
+
+export type ServerOptions = {
+	session?: Session
+}
