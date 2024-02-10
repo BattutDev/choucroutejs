@@ -11,6 +11,10 @@ export default class Request {
 
 	public queryParams: Map<string, string | string[] | Record<string, string>> = new Map();
 
+	public sessionId: string | null = null;
+
+	public session: unknown | undefined;
+
 	constructor () {}
 
 	setBody (r: IncomingMessage): Promise<Request> {
@@ -93,6 +97,16 @@ export default class Request {
 		});
 		return this;
 
+	}
+
+	setSession (session: unknown): Request {
+		this.session = session;
+		return this;
+	}
+
+	setSessionId (sessionId: string): Request {
+		this.sessionId = sessionId;
+		return this;
 	}
 
 }

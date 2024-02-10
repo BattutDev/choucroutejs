@@ -11,9 +11,11 @@ import {
 	Request,
 	Response,
 	BaseMiddleware,
-	MethodStringType
+	MethodStringType, ServerOptions
 } from './';
 import { Socket } from 'node:net';
+import {Session} from '../Session';
+import * as cookie from 'cookie';
 
 export default class Server {
 
@@ -21,7 +23,13 @@ export default class Server {
 
 	private connections: Set<Socket> = new Set();
 
-	constructor () {}
+	private session: Session | null = null;
+
+	constructor (options?: ServerOptions) {
+		if (options) {
+			if (options.session) this.useSession(options.session);
+		}
+	}
 
 	public connect (port: number = 8080, address: string = 'localhost'): Promise<void> {
 		return new Promise<void>((resolve) => {
@@ -77,10 +85,37 @@ export default class Server {
 				new Request()
 					.setHeaders(req.headers)
 					.setMethod(method)
-					.setBody(req).then((request) => {
+					.setBody(req).then(async (request) => {
 
+						// Query params
 						if (queryParams) {
 							request.setQueryParams(queryParams);
+						}
+
+						// Session
+						if (this.session) {
+							if (request.headers?.cookie) {
+								const parsedCookie = cookie.parse(request.headers.cookie);
+								const sessionId = parsedCookie.sessionId;
+
+								const session = await this.session.get(sessionId);
+								if (session) {
+									request.setSession(session);
+									request.setSessionId(sessionId);
+									/*
+									response.setHeader('Set-Cookie', cookie.serialize('sessionId', sessionId, {
+										httpOnly: true,
+										maxAge: 60 * 60 * 24 * 7 // 1 week
+									}));
+
+									 */
+								} else {
+									this.session.createSession(request, response, this.session);
+								}
+							}
+							else {
+								this.session.createSession(request, response, this.session);
+							}
 						}
 
 						new Promise<boolean>((resolve) => {
@@ -91,9 +126,12 @@ export default class Server {
 							});
 						}).then(() => {
 							const json = callback(request, response);
+							if (this.session) {
+								this.session.set(<string>request.sessionId, request.session);
+							}
 							response.send(json, 200, {'Content-Type': 'application/json'});
 						}).catch((e) => {
-							response.send({message: e.message}, 400, {'Content-Type': 'application/json'});
+							response.send({message: e.message}, 500, {'Content-Type': 'application/json'});
 						});
 					});
 			}
@@ -117,5 +155,9 @@ export default class Server {
 				else resolve(true);
 			});
 		});
+	}
+
+	public useSession (session: Session) {
+		this.session = session;
 	}
 }

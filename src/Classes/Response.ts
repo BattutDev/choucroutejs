@@ -12,4 +12,8 @@ export default class Response {
 		this.rawResponse.write(JSON.stringify(body));
 		return this.rawResponse.end();
 	}
+
+	public setHeader (key: string, value: string) {
+		this.rawResponse.setHeader(key, value);
+	}
 }
